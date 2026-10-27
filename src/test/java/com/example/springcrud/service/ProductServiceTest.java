@@ -112,5 +112,43 @@ public class ProductServiceTest {
         verify(repository).findById(99L);
     }
 
+    @Test
+    void shouldUpdateProductSuccessfully() {
+        Long productId = 1L;
+
+        Product existingProduct = new Product(
+                productId,
+                "Notebook Acer",
+                "Notebook gamer",
+                new BigDecimal("8500.00"),
+                10
+        );
+
+        Product updatedData = new Product(
+                null,
+                "Notebook Dell",
+                "Notebook corporativo",
+                new BigDecimal("6500.00"),
+                5
+        );
+
+        when(repository.findById(productId))
+                .thenReturn(Optional.of(existingProduct));
+
+        when(repository.save(any(Product.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        Product result = service.update(productId, updatedData);
+        assertEquals(productId, result.getId());
+        assertEquals("Notebook Dell", result.getName());
+        assertEquals("Notebook corporativo", result.getDescription());
+        assertEquals(new BigDecimal("6500.00"), result.getPrice());
+        assertEquals(5, result.getQuantity());
+
+        verify(repository).findById(productId);
+        verify(repository).save(existingProduct);
+
+    }
+
 
 }

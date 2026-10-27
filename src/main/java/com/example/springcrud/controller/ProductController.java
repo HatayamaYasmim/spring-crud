@@ -34,4 +34,9 @@ public class ProductController {
     public ResponseEntity<Product> findById(@PathVariable Long id) {
         return ResponseEntity.ok(service.findById(id));
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Product> update(@PathVariable Long id, @RequestBody Product product) {
+        return ResponseEntity.ok(service.update(id, product));
+    }
 }
