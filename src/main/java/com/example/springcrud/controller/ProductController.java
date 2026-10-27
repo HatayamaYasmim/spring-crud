@@ -1,7 +1,10 @@
 package com.example.springcrud.controller;
 
+import com.example.springcrud.dto.ProductRequestDTO;
+import com.example.springcrud.dto.ProductResponseDTO;
 import com.example.springcrud.entity.Product;
 import com.example.springcrud.service.ProductService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +21,26 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Product> create(@RequestBody Product product) {
+    public ResponseEntity<ProductResponseDTO> create(@Valid @RequestBody ProductRequestDTO request) {
+        Product product = new Product();
+
+        product.setName(request.name());
+        product.setDescription(request.description());
+        product.setPrice(request.price());
+        product.setQuantity(request.quantity());
+
         Product created = service.create(product);
+
+        ProductResponseDTO response = new ProductResponseDTO(
+                created.getId(),
+                created.getName(),
+                created.getDescription(),
+                created.getPrice(),
+                created.getQuantity()
+        );
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(created);
+                .body(response);
     }
 
     @GetMapping
