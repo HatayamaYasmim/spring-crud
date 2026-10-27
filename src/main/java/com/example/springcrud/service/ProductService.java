@@ -61,6 +61,17 @@ public ProductService(ProductRepository repository) {
         return repository.save(existingProduct);
     }
 
+    @Transactional
+    public void  delete(Long id) {
+        Product existingProduct = repository.findById(id)
+                .orElseThrow(() ->
+                        new IllegalArgumentException(
+                                "Produto não encontrado: " + id
+                        )
+                );
+
+        repository.deleteById(id);
+    }
 
 
 

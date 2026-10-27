@@ -150,5 +150,22 @@ public class ProductServiceTest {
 
     }
 
+    @Test
+    void shouldDeleteProductSuccessfully() {
+        Long productId = 99L;
+
+        when(repository.findById(productId))
+                .thenReturn(Optional.empty());
+
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> service.delete(productId)
+        );
+
+        assertEquals("Produto não encontrado: 99",exception.getMessage());
+
+        verify(repository).findById(productId);
+        verify(repository, never()).deleteById(anyLong());
+    }
 
 }
